@@ -4,75 +4,71 @@ import {useState, useEffect} from 'react'
 function App() {
   const [breakLength, setBreakLength] = useState(5)
   const [sessionLength, setSessionLength] = useState(25)
-  const [timerLabel, setTimerLabel] = useState("Session")
-  const [minutes, setMinutes] = useState(25)
-  const [seconds, setSeconds] = useState(60)
-  const [timerOn, setTimerOn] = useState(false)
-  const [sessionOn, setSessionOn] = useState(true)
-  const [timer, setTimer] = useState(1500)
+  const [start, setStart] = useState(false)
+  const [session, setSession] = useState(true)
+  const [minutes, setMinutes] = useState(0)
+  const [seconds, setSeconds] = useState(0)
+  const [timeLeft, setTimeLeft] = useState(1500)
   
+  const handleStart = () => {
+    setStart((start) => (!start))
+  }
+
   const handleReset = () => {
     setBreakLength(5)
     setSessionLength(25)
     setMinutes(25)
-    setSeconds(60)
-    setTimerLabel("Session")
-    setTimerOn(false)
-    setSessionOn(true)
+    setSeconds(0)
+    setStart(false)
+    setSession(true)
+    setTimeLeft(1500)
     const audio = document.getElementById("beep")
     audio.pause()
     audio.currentTime = 0
-    setTimer(1500)
   }
   
   const handleBreakIncrement = () => {
-    if (breakLength >= 60) {return}
+    if (breakLength >= 60) return
     setBreakLength(breakLength + 1)
   }
   
   const handleBreakDecrement = () => {
-    if (breakLength < 2) {return}
+    if (breakLength < 2) return
     setBreakLength(breakLength - 1)    
   }
   
   const handleSessionIncrement = () => {
-    if (sessionLength >= 60) {return}
-    setSessionLength(sessionLength + 1)      
+    if (sessionLength >= 60) return
+    setSessionLength(sessionLength + 1)     
   }
   
   const handleSessionDecrement = () => {
-    if (sessionLength < 2) {return}
+    if (sessionLength < 2) return
     setSessionLength(sessionLength - 1)
   }
 
+  useEffect(()=> {
+    session ? setTimeLeft(sessionLength * 60) : setTimeLeft(breakLength * 60) 
+  }, [sessionLength, breakLength, session])
+
   useEffect(() => {
-    if (timerOn === false) {return}
-    const timerId = setInterval(() => setTimer(timer-1), 1000)
-    setSeconds(timer % 60)
-    setMinutes(Math.floor(timer / 60))
-    if (timer === 0) {
-      setSessionOn(!sessionOn)
+    setMinutes(Math.floor(timeLeft / 60))
+    setSeconds(timeLeft % 60)
+    if (start === false) return
+    const timerId = setInterval(() => setTimeLeft(timeLeft-1), 1000)
+    if (timeLeft === 0) {
       document.getElementById("beep").play()
-      if (!sessionOn) {
-        setTimerLabel("Break")
-        setTimer(breakLength * 60)
-        setSeconds(60)
-        setMinutes(breakLength)
-      }
-      else {
-        setTimerLabel("Session")
-        setTimer(sessionLength * 60)
-        setSeconds(60)
-        setMinutes(sessionLength)
-      }
     }
-    return () => clearInterval(timerId)     
-  }
-  ,[timer, timerOn])
+    else if (timeLeft < 0) {
+      setSession(session => !session)
+    }
+    return () => clearInterval(timerId)   
+    }
+  ,[timeLeft, start])
 
   return (
     <div id="app">
-    <h1>{sessionLength} + {breakLength} Clock</h1>
+    <h1>25 + 5 Clock</h1>
     <div id="container">
       <div id="break-container">  
         <div id="break-label" className="label">Break Length
@@ -93,12 +89,12 @@ function App() {
         </div>
       </div>
     </div>
-    <h2 id="timer-label" style={{color: sessionOn ? '#333' : 'green'}}>{timerLabel}</h2>
-    <div id="time-left" style={{color: sessionOn ? 'crimson' : 'green'}}>
-      {(minutes.toString().length === 1) ? "0"+(minutes) : (minutes)}:{(seconds % 60) <= 9 ? ("0"+(seconds % 60)) : (seconds % 60)}
+    <h2 id="timer-label" style={{color: session ? '#333' : 'green'}}>{session ? "Session" : "Break"}</h2>
+    <div id="time-left" style={{color: session ? 'crimson' : 'green'}}>
+      {(minutes < 10) ? ("0"+minutes) : (minutes)}:{(seconds % 60) < 10 ? ("0"+(seconds % 60)) : (seconds % 60)}
      </div> 
-    <div class="buttons">     
-      <button onClick={() => setTimerOn(!timerOn)} id="start_stop">{timerOn ? "Stop" : "Start"}</button> 
+    <div className="buttons">
+      <button onClick={handleStart} id="start_stop">{start ? "Stop" : "Start"}</button> 
       <button onClick={handleReset} id="reset">Reset</button>
     </div>
      <audio id="beep" src="http://commondatastorage.googleapis.com/codeskulptor-assets/Evillaugh.ogg"></audio>

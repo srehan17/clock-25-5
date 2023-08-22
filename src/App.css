@@ -11,7 +11,8 @@ h1 {
 }
 
 .label {
-  font-size: 20px
+  font-size: 20px;
+  text-align: center;
 }
 
 .buttons {
@@ -48,7 +49,8 @@ button:hover {
   justify-content: space-between;
   gap: 100px;
   border-bottom: 1px dotted black;
-  padding-bottom: 30px
+  padding-bottom: 30px;
+
 }
 
 #timer-label {
@@ -65,5 +67,5 @@ button:hover {
   width: 12px;
   color: maroon;
   display: flex;
-  justify-content: center
+  justify-content: center;
 }
