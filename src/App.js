@@ -97,7 +97,7 @@ function App() {
       <button onClick={handleStart} id="start_stop">{start ? "Stop" : "Start"}</button> 
       <button onClick={handleReset} id="reset">Reset</button>
     </div>
-     <audio id="beep" src="http://commondatastorage.googleapis.com/codeskulptor-assets/Evillaugh.ogg"></audio>
+     <audio id="beep" src="http://codeskulptor-demos.commondatastorage.googleapis.com/descent/gotitem.mp3"></audio>
  </div>
   )
 }
