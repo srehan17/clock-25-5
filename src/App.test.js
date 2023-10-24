@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('renders h1 heading 25 + 5 Clock', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  let wrapper = container.querySelector('h1');
+  expect(wrapper?.textContent).toEqual('25 + 5 Clock');
 });
