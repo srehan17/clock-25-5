@@ -68,7 +68,7 @@ function App() {
 
   return (
     <div id="app">
-    <h1>25 + 5 Clock</h1>
+    <h1>Pomodoro Timer - 25 + 5 Clock</h1>
     <div id="container">
       <div id="break-container">  
         <div id="break-label" className="label">Break Length
